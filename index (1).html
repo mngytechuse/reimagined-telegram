@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jain Kalyanak Calendar 2026</title>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #fdf6ec;
+      padding: 10px;
+    }
+
+    #app-header {
+      text-align: center;
+      padding: 10px 0 14px;
+    }
+
+    #app-header h1 {
+      font-size: 20px;
+      color: #7b3f00;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    #app-header p {
+      font-size: 12px;
+      color: #a0522d;
+      margin-top: 2px;
+    }
+
+    /* Tab switcher */
+    #tab-bar {
+      display: flex;
+      max-width: 900px;
+      margin: 0 auto 14px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid #c8622a;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 0;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: #fff;
+      color: #c8622a;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #c8622a;
+      color: #fff;
+    }
+
+    /* Panels */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* Calendar panel */
+    #calendar-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px rgba(180,100,0,0.12);
+      overflow: hidden;
+      padding: 12px;
+    }
+
+    /* FullCalendar overrides */
+    .fc .fc-toolbar-title { font-size: 16px; color: #7b3f00; font-weight: 700; }
+    .fc .fc-button-primary { background: #c8622a !important; border-color: #c8622a !important; font-size: 13px; }
+    .fc .fc-button-primary:hover { background: #a0522d !important; border-color: #a0522d !important; }
+    .fc .fc-col-header-cell { background: #fdf0e0; color: #7b3f00; font-weight: 600; font-size: 12px; }
+    .fc .fc-daygrid-day-number { color: #555; font-size: 12px; font-weight: 600; }
+    .fc .fc-daygrid-day.fc-day-today { background: #fff8ee !important; }
+    .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+      background: #c8622a; color: #fff; border-radius: 50%;
+      width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px;
+    }
+    .fc-event { border-radius: 4px !important; border: none !important; font-size: 10px !important; padding: 1px 4px !important; cursor: pointer; }
+    .fc-event.kalyanak-Garbh { background: #8e44ad !important; color: #fff !important; }
+    .fc-event.kalyanak-Janma { background: #27ae60 !important; color: #fff !important; }
+    .fc-event.kalyanak-Tap   { background: #e67e22 !important; color: #fff !important; }
+    .fc-event.kalyanak-Gyan  { background: #2980b9 !important; color: #fff !important; }
+    .fc-event.kalyanak-Moksh { background: #c0392b !important; color: #fff !important; }
+
+    .kaly-candle {
+      width: 6px; height: 16px; border-radius: 2px 2px 0 0;
+      position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+      z-index: 5; pointer-events: none;
+    }
+    .fc-daygrid-day-frame { position: relative !important; }
+
+    /* Legend */
+    #legend {
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+      margin: 12px 0 6px; font-size: 11px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 4px; color: #555; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+
+    /* ── Tirthankar Lookup Panel ── */
+    #lookup-panel {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    #lookup-box {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px rgba(180,100,0,0.12);
+      padding: 20px;
+    }
+
+    #lookup-box h2 {
+      font-size: 16px;
+      color: #7b3f00;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .lookup-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #7b3f00;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .lookup-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #e8c99a;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #333;
+      background: #fffbf5;
+      margin-bottom: 16px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c8622a' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      cursor: pointer;
+    }
+
+    .lookup-select:focus {
+      outline: none;
+      border-color: #c8622a;
+    }
+
+    /* Kalyanak buttons grid */
+    #kalyanak-btns {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .kaly-btn {
+      padding: 10px 4px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .kaly-btn.available {
+      opacity: 1;
+    }
+
+    .kaly-btn.available:hover {
+      transform: scale(1.05);
+    }
+
+    .kaly-btn.selected {
+      outline: 3px solid #333;
+      outline-offset: 2px;
+    }
+
+    /* Result card */
+    #lookup-result {
+      display: none;
+      background: #fdf0e0;
+      border-radius: 10px;
+      padding: 16px 18px;
+      border-left: 4px solid #c8622a;
+    }
+
+    #lookup-result.show { display: block; }
+
+    #result-not-found {
+      display: none;
+      text-align: center;
+      color: #999;
+      font-size: 13px;
+      padding: 12px 0;
+    }
+
+    #result-not-found.show { display: block; }
+
+    #result-title {
+      font-size: 13px;
+      color: #7b3f00;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    #result-date {
+      font-size: 22px;
+      font-weight: 700;
+      color: #c8622a;
+      margin-bottom: 4px;
+    }
+
+    #result-day {
+      font-size: 13px;
+      color: #888;
+    }
+
+    #loading-msg {
+      text-align: center;
+      color: #a0522d;
+      font-size: 13px;
+      padding: 20px;
+    }
+
+    /* Detail popup */
+    #detail-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); z-index: 9999;
+      align-items: center; justify-content: center;
+    }
+    #detail-overlay.show { display: flex; }
+    #detail-box {
+      background: #fff; border-radius: 14px; padding: 20px 22px 16px;
+      max-width: 320px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+    }
+    #detail-box h2 { font-size: 15px; color: #7b3f00; margin-bottom: 10px; border-bottom: 1px solid #f0dcc0; padding-bottom: 8px; }
+    .detail-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 6px; font-size: 13px; }
+    .detail-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0; }
+    #detail-close {
+      display: block; margin: 14px auto 0; background: #c8622a; color: #fff;
+      border: none; border-radius: 8px; padding: 8px 28px; font-size: 13px; cursor: pointer; font-weight: 600;
+    }
+    #detail-close:hover { background: #a0522d; }
+  </style>
+</head>
+<body>
+
+  <div id="app-header">
+    <h1>🕉 Jain Kalyanak Calendar 2026</h1>
+    <p>View kalyanaks by calendar or by Tirthankar</p>
+  </div>
+
+  <!-- Tab bar -->
+  <div id="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('calendar')">📅 Calendar View</button>
+    <button class="tab-btn" onclick="switchTab('lookup')">🔍 Tirthankar-wise</button>
+  </div>
+
+  <!-- CALENDAR PANEL -->
+  <div id="calendar-panel" class="panel active">
+    <div id="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#8e44ad"></div> Garbh</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div> Janma</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#e67e22"></div> Tap</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2980b9"></div> Gyan</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#c0392b"></div> Moksh</div>
+    </div>
+    <div id="calendar-wrap">
+      <div id="loading-msg">Loading kalyanaks…</div>
+      <div id="calendar" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- TIRTHANKAR LOOKUP PANEL -->
+  <div id="lookup-panel" class="panel">
+    <div id="lookup-box">
+      <h2>🔍 Find Kalyanak by Tirthankar</h2>
+
+      <label class="lookup-label" for="t-select">Select Tirthankar</label>
+      <select id="t-select" class="lookup-select" onchange="onTirthankarChange()">
+        <option value="">— Choose a Tirthankar —</option>
+      </select>
+
+      <label class="lookup-label">Select Kalyanak</label>
+      <div id="kalyanak-btns">
+        <button class="kaly-btn" style="background:#8e44ad" data-k="Garbh" onclick="onKalyanakClick('Garbh')">Garbh</button>
+        <button class="kaly-btn" style="background:#27ae60" data-k="Janma" onclick="onKalyanakClick('Janma')">Janma</button>
+        <button class="kaly-btn" style="background:#e67e22" data-k="Tap"   onclick="onKalyanakClick('Tap')">Tap</button>
+        <button class="kaly-btn" style="background:#2980b9" data-k="Gyan"  onclick="onKalyanakClick('Gyan')">Gyan</button>
+        <button class="kaly-btn" style="background:#c0392b" data-k="Moksh" onclick="onKalyanakClick('Moksh')">Moksh</button>
+      </div>
+
+      <div id="lookup-result">
+        <div id="result-title"></div>
+        <div id="result-date"></div>
+        <div id="result-day"></div>
+      </div>
+
+      <div id="result-not-found">
+        ⚠ This kalyanak is not listed for 2026.
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail popup (calendar) -->
+  <div id="detail-overlay">
+    <div id="detail-box">
+      <h2 id="detail-date"></h2>
+      <div id="detail-list"></div>
+      <button id="detail-close" onclick="closeDetail()">Close</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+  <script>
+    const EVENTS_JSON_URL = "kalyanakas_2026.json";
+
+    const KALYANAK_COLORS = {
+      "Garbh": "#8e44ad",
+      "Janma": "#27ae60",
+      "Tap":   "#e67e22",
+      "Gyan":  "#2980b9",
+      "Moksh": "#c0392b"
+    };
+
+    const DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+    let allEvents = [];        // raw events array
+    let selectedTirthankar = "";
+    let selectedKalyanak   = "";
+
+    function colorFor(k) { return KALYANAK_COLORS[k] || "#888"; }
+
+    // ── Tab switching ──
+    function switchTab(tab) {
+      document.querySelectorAll(".tab-btn").forEach((b, i) => {
+        b.classList.toggle("active", (i === 0 && tab === "calendar") || (i === 1 && tab === "lookup"));
+      });
+      document.getElementById("calendar-panel").classList.toggle("active", tab === "calendar");
+      document.getElementById("lookup-panel").classList.toggle("active", tab === "lookup");
+    }
+
+    // ── Tirthankar dropdown ──
+    function populateTirthankarDropdown(events) {
+      const names = [...new Set(events.map(e => e.tirthankar))].sort();
+      const sel = document.getElementById("t-select");
+      names.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name + " ji";
+        sel.appendChild(opt);
+      });
+    }
+
+    function onTirthankarChange() {
+      selectedTirthankar = document.getElementById("t-select").value;
+      selectedKalyanak   = "";
+
+      // Reset result
+      document.getElementById("lookup-result").classList.remove("show");
+      document.getElementById("result-not-found").classList.remove("show");
+
+      // Reset button selection
+      document.querySelectorAll(".kaly-btn").forEach(b => b.classList.remove("selected"));
+
+      if (!selectedTirthankar) {
+        // Dim all buttons
+        document.querySelectorAll(".kaly-btn").forEach(b => b.classList.remove("available"));
+        return;
+      }
+
+      // Find which kalyanaks exist for this tirthankar
+      const available = new Set(
+        allEvents.filter(e => e.tirthankar === selectedTirthankar).map(e => e.kalyanak)
+      );
+
+      document.querySelectorAll(".kaly-btn").forEach(b => {
+        b.classList.toggle("available", available.has(b.dataset.k));
+      });
+    }
+
+    function onKalyanakClick(kalyanak) {
+      if (!selectedTirthankar) return;
+
+      // Check if this kalyanak is available
+      const btn = document.querySelector(`.kaly-btn[data-k="${kalyanak}"]`);
+      if (!btn.classList.contains("available")) return;
+
+      selectedKalyanak = kalyanak;
+
+      // Highlight selected button
+      document.querySelectorAll(".kaly-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+
+      // Look up the date
+      const match = allEvents.find(
+        e => e.tirthankar === selectedTirthankar && e.kalyanak === kalyanak
+      );
+
+      const resultEl   = document.getElementById("lookup-result");
+      const notFoundEl = document.getElementById("result-not-found");
+
+      if (match) {
+        const d = new Date(match.date + "T00:00:00");
+        document.getElementById("result-title").textContent =
+          selectedTirthankar + " ji — " + kalyanak + " Kalyanak";
+        document.getElementById("result-date").textContent =
+          d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear();
+        document.getElementById("result-day").textContent =
+          DAYS[d.getDay()];
+        resultEl.style.borderLeftColor = colorFor(kalyanak);
+        resultEl.classList.add("show");
+        notFoundEl.classList.remove("show");
+      } else {
+        resultEl.classList.remove("show");
+        notFoundEl.classList.add("show");
+      }
+    }
+
+    // ── Calendar ──
+    function toFCEvents(events) {
+      return events.map((ev, i) => ({
+        id: String(i),
+        title: ev.tirthankar + " — " + ev.kalyanak,
+        start: ev.date,
+        allDay: true,
+        classNames: ["kalyanak-" + ev.kalyanak],
+        extendedProps: { tirthankar: ev.tirthankar, kalyanak: ev.kalyanak },
+        backgroundColor: colorFor(ev.kalyanak),
+        borderColor: colorFor(ev.kalyanak)
+      }));
+    }
+
+    function groupByDate(events) {
+      const map = {};
+      events.forEach(ev => {
+        map[ev.date] = map[ev.date] || [];
+        map[ev.date].push(ev);
+      });
+      return map;
+    }
+
+    function showDetail(dateStr, eventsOnDate) {
+      const d = new Date(dateStr + "T00:00:00");
+      document.getElementById("detail-date").textContent =
+        DAYS[d.getDay()] + ", " + d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear();
+
+      const listEl = document.getElementById("detail-list");
+      listEl.innerHTML = "";
+      eventsOnDate.forEach(ev => {
+        const row = document.createElement("div");
+        row.className = "detail-row";
+        const badge = document.createElement("span");
+        badge.className = "detail-badge";
+        badge.style.background = colorFor(ev.kalyanak);
+        badge.textContent = ev.kalyanak;
+        const name = document.createElement("span");
+        name.textContent = ev.tirthankar + " ji";
+        row.appendChild(badge);
+        row.appendChild(name);
+        listEl.appendChild(row);
+      });
+
+      document.getElementById("detail-overlay").classList.add("show");
+
+      try {
+        if (window.AppInventor && window.AppInventor.setWebViewString) {
+          window.AppInventor.setWebViewString(JSON.stringify({ type: "dateClick", date: dateStr, events: eventsOnDate }));
+        }
+      } catch(e) {}
+    }
+
+    function closeDetail() {
+      document.getElementById("detail-overlay").classList.remove("show");
+    }
+
+    document.getElementById("detail-overlay").addEventListener("click", function(e) {
+      if (e.target === this) closeDetail();
+    });
+
+    function initCalendar(rawEvents) {
+      document.getElementById("loading-msg").style.display = "none";
+      document.getElementById("calendar").style.display = "block";
+
+      const fcEvents = toFCEvents(rawEvents);
+      const byDate   = groupByDate(rawEvents);
+
+      const calendar = new FullCalendar.Calendar(document.getElementById("calendar"), {
+        initialView: "dayGridMonth",
+        height: "auto",
+        dayMaxEventRows: 3,
+        events: fcEvents,
+        eventClick: function(info) {
+          showDetail(info.event.startStr.slice(0,10), byDate[info.event.startStr.slice(0,10)] || []);
+        },
+        dayCellDidMount: function(info) {
+          const date = info.date.toISOString().slice(0,10);
+          if (byDate[date]) {
+            const candle = document.createElement("div");
+            candle.className = "kaly-candle";
+            candle.style.background = byDate[date].length > 1 ? "#e67e22" : colorFor(byDate[date][0].kalyanak);
+            info.el.appendChild(candle);
+            info.el.style.cursor = "pointer";
+            info.el.addEventListener("click", function(e) {
+              if (!e.target.closest(".fc-event")) showDetail(date, byDate[date]);
+            });
+          }
+        }
+      });
+      calendar.render();
+    }
+
+    // ── Load JSON ──
+    fetch(EVENTS_JSON_URL)
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(data => {
+        allEvents = data.events || [];
+        initCalendar(allEvents);
+        populateTirthankarDropdown(allEvents);
+      })
+      .catch(err => {
+        document.getElementById("loading-msg").textContent =
+          "⚠ Could not load events. (" + err.message + ")";
+      });
+
+    window.receiveEventsJson = function(jsonString) {
+      try {
+        const data = JSON.parse(jsonString);
+        allEvents = data.events || [];
+        initCalendar(allEvents);
+        populateTirthankarDropdown(allEvents);
+      } catch(e) { console.error(e); }
+    };
+  </script>
+</body>
+</html>
